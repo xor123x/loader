@@ -325,6 +325,98 @@ function finity.new(isdark, gprojectName, thinProject)
 	})
 	uilistlayout.Parent = self2.sidebar
 	uilistlayout = nil
+	
+	function self2:NewLogWindow(text)
+		local actions = {}
+		text = text or "New Window"
+		
+		local Top = CreateTop(text, true, UDim2.new(0, 600, 0, 25), UDim2.new(.65, 0, .6, 0))
+		local body = Instance.new("ScrollingFrame", Top)
+		
+		body.Position = UDim2.new(0, 0, 0, 0)
+		body.Size = UDim2.new(1, 0, 0, 300)
+		body.BackgroundTransparency = 0
+		body.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+		body.BorderSizePixel = 0
+		body.ClipsDescendants = true
+		body.Name = HttpService:GenerateGUID(false)
+
+		local VelTxt = Instance.new("TextLabel",Top)
+		VelTxt.ZIndex = Top.ZIndex + 1
+		VelTxt.Text = "Vel Earned: "
+		VelTxt.BackgroundTransparency = 1
+		VelTxt.TextColor3 = Color3.fromRGB(210, 210, 0)
+		VelTxt.Position = UDim2.new(0,60,0.5,0)
+		VelTxt.TextSize = 20
+		VelTxt.Font = options.font
+		VelTxt.Name = HttpService:GenerateGUID(false)
+
+		function actions:Log(text, color3, image)
+			local log = Instance.new("TextLabel")
+			log.Parent = body
+			log.Text = text or ""
+			log.Size = UDim2.new(1, 0, 0, 35)
+			log.TextColor3 = color3 or Color3.new(1,1,1)
+			log.BackgroundTransparency = 1
+			log.TextSize = 20
+			log.TextXAlignment = Enum.TextXAlignment.Center
+			log.Position = UDim2.new(0,0,0, (30 * #body:GetChildren()))
+			log.Font = options.font
+			log.Name = HttpService:GenerateGUID(false)
+			body.CanvasSize = UDim2.new(0, 0, 0, #body:GetChildren() * 30)
+		end
+
+		local actionbutton = Instance.new("ImageButton", Top)
+		actionbutton.BackgroundTransparency = 1
+		actionbutton.Size = UDim2.new(0, 25, 0, 25)
+		actionbutton.Position = UDim2.new(0.93, 0, 0, 0)
+		actionbutton.ZIndex = Top.ZIndex
+		actionbutton.Image = 'rbxassetid://244221613'
+		actionbutton.ImageTransparency = 1
+		actionbutton.Name = HttpService:GenerateGUID(false)
+
+		local OPImg = Instance.new("ImageLabel", actionbutton)
+		OPImg.BackgroundTransparency = 1
+		OPImg.Size = UDim2.new(0, 0, 1, 0)
+		OPImg.Position = UDim2.new(0.5, 0, 0, 0)
+		OPImg.ZIndex = actionbutton.ZIndex + 1
+		OPImg.Image = 'rbxassetid://52756150'
+		OPImg.Name = HttpService:GenerateGUID(false)
+
+		local CLImg = Instance.new("ImageLabel", actionbutton)
+		CLImg.BackgroundTransparency = 1
+		CLImg.Size = UDim2.new(1, 0, 1, 0)
+		CLImg.Position = UDim2.new(0, 0, 0, 0)
+		CLImg.ZIndex = actionbutton.ZIndex + 1
+		CLImg.Image = 'rbxassetid://52756189'
+		CLImg.Name = HttpService:GenerateGUID(false)
+
+		local function Close ()
+			Resize(body,{Size = UDim2.new(1, 0, 0, 0), Position = UDim2.new(0, 0, 6, -132.5)})
+			
+			Resize(OPImg, {Size = UDim2.new(1.05, 0, 1.05, 0), Position = UDim2.new(0, 0, 0, 0)}, 0.25)
+		end
+
+		local function Open ()
+			Resize(body, {Size = UDim2.new(1, 0, 0, 300), Position = UDim2.new(0,0,0,0)})
+			
+			Resize(OPImg, {Size = UDim2.new(1.05, 0, 0, 0), Position = UDim2.new(0, 0, 0.5, 0)}, 0.25)
+		end
+
+		local open = true
+		actionbutton.MouseButton1Click:connect(function()
+			open = not open
+			local func = open and Open or Close
+			func()
+		end)
+
+		function actions:SetVel(num)
+			VelTxt.Text = "Vel Earned: "..num
+		end
+
+		return actions
+
+	end
 
 	function self2:Category(name)
 		local category = {}
